@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Print a short cheat sheet of the tmux shortcuts set up by ~/.config/tmux/tmux.conf
+# Keep in sync with tmux.conf when changing bindings
+
+# Read the real prefix when a tmux server is running, default otherwise
+prefix="$(tmux show -gv prefix 2>/dev/null || echo C-b)"
+prefix="${prefix/C-/Ctrl+}"
+
+if [[ -t 1 ]]; then
+  h=$'\033[1;34m' k=$'\033[1;33m' d=$'\033[2m' r=$'\033[0m'
+else
+  h='' k='' d='' r=''
+fi
+
+section() { printf '\n%s%s%s\n' "$h" "$1" "$r"; }
+key() { printf '  %s%-22s%s %s\n' "$k" "$1" "$r" "$2"; }
+
+printf '%stmux shortcuts%s %s(prefix = %s, press it then the key)%s\n' "$h" "$r" "$d" "$prefix" "$r"
+
+section "Panes"
+key "Alt+|"                "Split side by side"
+key "Alt+_"                "Split top and bottom"
+key "Alt+Arrows"           "Move between panes"
+key "prefix z"             "Zoom pane in/out"
+key "prefix x"             "Close pane"
+
+section "Windows"
+key "prefix c"             "New window"
+key "Ctrl+Alt+Left/Right"  "Previous/next window"
+key "prefix Ctrl+p/n"      "Previous/next window"
+key "prefix ,"             "Rename window"
+
+section "Scrolling and copying"
+key "Mouse wheel"          "Scroll back (enters copy mode)"
+key "Mouse drag"           "Select text"
+key "Ctrl+Shift+c"         "Copy selection and leave copy mode"
+key "/  ?"                 "Search down/up in scrollback"
+key "Esc"                  "Leave copy mode"
+key "Any other key"        "Leave copy mode and type the key"
+
+section "Session"
+key "prefix d"             "Detach (new terminals reattach to 'main')"
+key "prefix R"             "Reload tmux.conf"
+key "prefix I / U"         "Install/update plugins"
+echo
