@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # Leave copy mode on keypress and pass the key through to the pane
 
-chars='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`~!@#$%^&*()-_=+[]|:,.<>'
-named='Space Enter BSpace Tab C-a C-c C-d C-e C-l C-r C-u C-w'
+chars='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`~!@#$%^&*()-_=+[]{}|:,.<>"'"'"'\'
+named='Space Enter BSpace Tab BTab DC IC F1 F2 F3 F4 F5 F6 F7 F8 F9 F10 F11 F12'
+for c in {a..z}; do named+=" C-$c M-$c"; done
 
 for table in copy-mode copy-mode-vi; do
   for (( i=0; i<${#chars}; i++ )); do
@@ -19,6 +20,6 @@ for table in copy-mode copy-mode-vi; do
   # Search scrollback
   tmux bind -T "$table" / command-prompt -T search -p '(search down)' 'send-keys -X search-forward -- "%%"'
   tmux bind -T "$table" '?' command-prompt -T search -p '(search up)' 'send-keys -X search-backward -- "%%"'
-  # Anything else, except mouse events (mouse_x is only set for those)
-  tmux bind -T "$table" Any if -F '#{==:#{mouse_x},}' 'send-keys -X cancel'
+  # Drop catch-all binding
+  tmux unbind -T "$table" Any 2>/dev/null || true
 done
